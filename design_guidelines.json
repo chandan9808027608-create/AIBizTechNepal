@@ -1,0 +1,129 @@
+{
+  "theme": "Dark Mode (High-End Structural Wireframe Aesthetic)",
+  "typography": {
+    "fonts": [
+      {
+        "role": "Headings (H1-H4)",
+        "family": "Outfit",
+        "weight": "font-light to font-medium",
+        "description": "Tech-forward, crisp sans-serif."
+      },
+      {
+        "role": "Body",
+        "family": "IBM Plex Sans",
+        "weight": "font-normal",
+        "description": "Clean, highly readable geometric body."
+      },
+      {
+        "role": "Accents/Labels/Tags",
+        "family": "JetBrains Mono",
+        "weight": "font-medium",
+        "description": "Critical for the 'wireframe/terminal' aesthetic. Use for small labels, stat numbers, and navigation."
+      }
+    ],
+    "rules": [
+      "NO Inter for headings.",
+      "Headings must use tracking-tight.",
+      "Labels must be uppercase, text-xs, tracking-[0.2em] with JetBrains Mono."
+    ]
+  },
+  "colors": {
+    "backgrounds": {
+      "base": "bg-slate-950",
+      "surface": "bg-slate-900",
+      "glass": "bg-slate-950/70 backdrop-blur-xl"
+    },
+    "text": {
+      "primary": "text-slate-100",
+      "secondary": "text-slate-400",
+      "accent": "text-cyan-400"
+    },
+    "borders": {
+      "default": "border-slate-800/80",
+      "active": "border-cyan-500/50"
+    },
+    "gradients": {
+      "accent": "bg-gradient-to-r from-cyan-500 to-blue-600",
+      "text_accent": "bg-clip-text text-transparent bg-gradient-to-r from-cyan-500 to-blue-600"
+    }
+  },
+  "layouts": {
+    "grid_strategy": "The 'Structural Blueprint' (Variant of Grid Borders)",
+    "rules": [
+      "Every major section should be separated by a 1px border-slate-800/80.",
+      "Cards should not have massive drop shadows; rely on 1px borders and slight background shifts (bg-slate-950 to bg-slate-900) on hover.",
+      "Use Tetris Grid (asymmetric) for the 'Services' and 'Projects' sections.",
+      "Generous spacing: use p-8, p-12, or p-16 inside bordered containers to prevent text collision."
+    ]
+  },
+  "visual_enhancers": {
+    "surfaces": [
+      "Tracing Beam: Use a glowing border effect on the 'Leading AI Solutions Firm' badge.",
+      "Glassmorphism: Use ONLY for the sticky header (bg-slate-950/70, backdrop-blur-xl, border-b border-slate-800/80)."
+    ],
+    "motion": [
+      "Staggered fade-up for grid items in 'Projects' and 'Services'.",
+      "Hover states on cards: -translate-y-1, border-cyan-500/50, and text color shifts."
+    ]
+  },
+  "components": {
+    "header": {
+      "style": "Sticky, Glassmorphism, z-50. Must include Logo, Nav links (JetBrains Mono text-sm), and 'Contact Us' CTA button."
+    },
+    "hero": {
+      "style": "Left-aligned, highly structural. Badge with Sparkles icon. H1 text-5xl md:text-6xl+. 3-item stat bar placed inside a bordered sub-grid at the bottom of the hero."
+    },
+    "buttons": {
+      "primary": "bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-medium rounded-none or rounded-sm. Sharp edges fit the wireframe aesthetic.",
+      "secondary": "border border-slate-700 hover:border-slate-500 text-slate-100 bg-transparent rounded-none or rounded-sm."
+    },
+    "cards": {
+      "style": "Flat background (bg-slate-950), 1px solid border-slate-800/80. No shadows. On hover, apply a subtle bg-slate-900 shift and border-cyan-500/30."
+    }
+  },
+  "media": {
+    "image_urls": [
+      {
+        "url": "https://images.unsplash.com/photo-1644088379091-d574269d422f?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NDk1ODB8MHwxfHNlYXJjaHwxfHxhYnN0cmFjdCUyMGRhdGElMjBuZXR3b3JrJTIwYmx1ZSUyMGN5YW58ZW58MHx8fHwxNzg2MTA4MzMxfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Abstract data network in blue/cyan",
+        "category": "Hero Section / Background Overlay",
+        "instructions": "Use with heavy opacity (opacity-20) and blend-mode-screen to add texture to the dark hero section without overpowering the text."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1758520145408-dedb359d1c49?crop=entropy&cs=srgb&fm=jpg&ixid=M3w4NTYxOTF8MHwxfHNlYXJjaHwzfHxtb2Rlcm4lMjBidXNpbmVzcyUyMGV4ZWN1dGl2ZXMlMjBtZWV0aW5nJTIwZGFya3xlbnwwfHx8fDE3ODYxMDgzMzF8MA&ixlib=rb-4.1.0&q=85",
+        "description": "Modern business executives working late",
+        "category": "About Section",
+        "instructions": "Place in the right column of the About split section. Overlay with a subtle border-slate-800/80 and grayscale until hover."
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1667420759202-4297bf3fd52a?crop=entropy&cs=srgb&fm=jpg&ixid=M3w3NTY2NzV8MHwxfHNlYXJjaHwzfHxrYXRobWFuZHUlMjBjaXR5JTIwbmlnaHR8ZW58MHx8fHwxNzg2MTA4MzMxfDA&ixlib=rb-4.1.0&q=85",
+        "description": "Kathmandu city at night",
+        "category": "Contact / Footer",
+        "instructions": "Use as a textured background for the contact section or alongside the embedded Google map to localize 'Nepal'."
+      }
+    ],
+    "icons": "Lucide React (already specified in user choices). Use them generously in Services & Projects."
+  },
+  "accessibility": {
+    "rules": [
+      "All text must meet 4.5:1 contrast against bg-slate-950.",
+      "Input fields in contact form must have clear focus states (focus:ring-2 focus:ring-cyan-500).",
+      "Include 'data-testid' on all interactive elements (buttons, links, form inputs)."
+    ]
+  },
+  "instructions_to_main_agent": [
+    "You are building a high-end structural wireframe landing page. Embrace sharp borders (border-slate-800/80) and raw grid aesthetics.",
+    "Do NOT center align text globally. Left-align text to maintain the blueprint/technical document feel.",
+    "Do NOT use 'Inter' for headings. Add Google Fonts links for 'Outfit' (headings), 'IBM Plex Sans' (body), and 'JetBrains Mono' (tags) to public/index.html.",
+    "Ensure the Google Map iframe is styled with CSS filters (e.g., 'invert(90%) hue-rotate(180deg) grayscale(1)') to match the dark theme, or just drop the opacity slightly so it doesn't break the dark UI.",
+    "Implement smooth scrolling for anchor tags (#about, #services, etc.).",
+    "Do NOT use pure black or pure white. Tint everything. Background is slate-950, borders are slate-800/80."
+  ],
+  "UNIVERSAL_GUIDELINES_FOR_MAIN_AGENT": [
+    "Do not converge toward generic outputs. Use the 'Grid Borders' approach heavily: expose the skeleton of the layout.",
+    "Do not apply 'transition: all'. Apply specific transitions like 'transition-colors' or 'transition-transform'.",
+    "Never use AI assistant emoji characters.",
+    "Ensure every interactive element has a data-testid attribute.",
+    "Use 2-3x more padding than usual (e.g., p-12, p-16) inside major sections."
+  ]
+}
