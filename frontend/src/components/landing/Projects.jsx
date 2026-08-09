@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
+import attendanceNepalDashboard from "@/assets/projects/attendance-nepal-dashboard.png";
 
 const shot = (url, version) =>
   `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url${version ? `&v=${version}` : ""}`;
@@ -31,7 +32,7 @@ const PROJECTS = [
     title: "Attendance Nepal",
     desc: "An attendance, payroll, and biometric device management console for organizations.",
     tags: ["Attendance", "Payroll"],
-    screenshot: shot("https://attendancenepal.vercel.app", 1),
+    screenshot: attendanceNepalDashboard,
     testId: "project-attendance-nepal",
   },
   {
