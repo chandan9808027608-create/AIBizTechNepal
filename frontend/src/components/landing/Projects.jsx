@@ -1,7 +1,7 @@
 import { ArrowRight } from "lucide-react";
 
-const shot = (url) =>
-  `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url`;
+const shot = (url, version) =>
+  `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url${version ? `&v=${version}` : ""}`;
 
 const PROJECTS = [
   {
@@ -15,7 +15,7 @@ const PROJECTS = [
     title: "Gokarna Hillside",
     desc: "A hospitality website showcasing rooms, amenities, and booking information for a hillside property.",
     tags: ["Hospitality", "Web"],
-    screenshot: shot("https://slateblue-monkey-364615.hostingersite.com/"),
+    screenshot: shot("https://slateblue-monkey-364615.hostingersite.com/", 2),
     testId: "project-gokarna-hillside",
   },
   {
