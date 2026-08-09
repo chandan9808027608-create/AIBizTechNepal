@@ -51,8 +51,8 @@ const PROJECTS = [
   },
 ];
 
-const ROTATE_FACTOR = 60;
-const MAX_ROTATE = 46;
+const ROTATE_FACTOR = 66;
+const MAX_ROTATE = 62;
 
 const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
 
@@ -95,8 +95,8 @@ export const Projects = () => {
         const rotateY = clamp(diffToTarget * -ROTATE_FACTOR, -MAX_ROTATE, MAX_ROTATE);
         const scale = clamp(1 - Math.abs(diffToTarget) * 0.34, 0.66, 1);
         const translateZ = -Math.abs(diffToTarget) * 160;
-        const translateX = diffToTarget * -46;
-        const opacity = clamp(1 - Math.abs(diffToTarget) * 0.55, 0.4, 1);
+        const translateX = diffToTarget * -78;
+        const opacity = clamp(1 - Math.abs(diffToTarget) * 0.4, 0.55, 1);
 
         node.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
         node.style.opacity = String(opacity);
@@ -151,32 +151,61 @@ export const Projects = () => {
         </div>
 
         <div className="relative mt-16">
-          <div className="overflow-hidden" style={{ perspective: "1600px" }} ref={emblaRef}>
-            <div className="flex touch-pan-y items-center py-8">
+          <div
+            className="overflow-hidden"
+            style={{
+              perspective: "1800px",
+              maskImage: "linear-gradient(to bottom, black 62%, transparent 92%)",
+              WebkitMaskImage: "linear-gradient(to bottom, black 62%, transparent 92%)",
+            }}
+            ref={emblaRef}
+          >
+            <div className="flex touch-pan-y items-start pt-10">
               {PROJECTS.map((project, i) => (
                 <div
                   key={project.testId}
-                  className="min-w-0 flex-[0_0_72%] px-3 sm:flex-[0_0_52%] md:flex-[0_0_40%] lg:flex-[0_0_32%]"
+                  className="min-w-0 flex-[0_0_58%] px-1.5 sm:flex-[0_0_42%] md:flex-[0_0_30%] lg:flex-[0_0_23%]"
                   style={{ transformStyle: "preserve-3d" }}
                 >
-                  <button
-                    type="button"
-                    onClick={() => scrollTo(i)}
-                    data-testid={project.testId}
-                    aria-label={`Show ${project.title}`}
-                    aria-current={i === selectedIndex}
-                    className="coverflow-item group block aspect-video w-full overflow-hidden rounded-sm border border-slate-800/80 bg-slate-900 shadow-2xl shadow-black/60 outline-none focus-visible:border-cyan-500/60"
+                  <div
+                    className="coverflow-item"
                     style={{ transformStyle: "preserve-3d", willChange: "transform, opacity" }}
                   >
-                    <img
-                      src={project.screenshot}
-                      alt={`${project.title} landing page screenshot`}
-                      data-testid={`${project.testId}-screenshot`}
-                      loading="lazy"
-                      draggable={false}
-                      className="h-full w-full select-none object-cover object-top"
-                    />
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => scrollTo(i)}
+                      data-testid={project.testId}
+                      aria-label={`Show ${project.title}`}
+                      aria-current={i === selectedIndex}
+                      className="group block aspect-video w-full overflow-hidden rounded-sm border border-slate-800/80 bg-slate-900 shadow-2xl shadow-black/60 outline-none focus-visible:border-cyan-500/60"
+                    >
+                      <img
+                        src={project.screenshot}
+                        alt={`${project.title} landing page screenshot`}
+                        data-testid={`${project.testId}-screenshot`}
+                        loading="lazy"
+                        draggable={false}
+                        className="h-full w-full select-none object-cover object-top"
+                      />
+                    </button>
+                    <div
+                      aria-hidden="true"
+                      className="mt-[2px] aspect-video w-full overflow-hidden rounded-sm opacity-45"
+                      style={{
+                        transform: "scaleY(-1)",
+                        maskImage: "linear-gradient(to bottom, rgba(0,0,0,0.55), transparent 75%)",
+                        WebkitMaskImage: "linear-gradient(to bottom, rgba(0,0,0,0.55), transparent 75%)",
+                      }}
+                    >
+                      <img
+                        src={project.screenshot}
+                        alt=""
+                        loading="lazy"
+                        draggable={false}
+                        className="h-full w-full select-none object-cover object-top"
+                      />
+                    </div>
+                  </div>
                 </div>
               ))}
             </div>
@@ -187,7 +216,7 @@ export const Projects = () => {
             onClick={scrollPrev}
             aria-label="Previous project"
             data-testid="projects-prev-btn"
-            className="absolute left-0 top-1/2 z-[1001] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-800/80 bg-slate-950/80 text-slate-300 backdrop-blur transition-colors hover:border-cyan-500/40 hover:text-cyan-400 sm:left-2"
+            className="absolute left-0 top-[34%] z-[1001] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-800/80 bg-slate-950/80 text-slate-300 backdrop-blur transition-colors hover:border-cyan-500/40 hover:text-cyan-400 sm:left-2"
           >
             <ChevronLeft className="h-5 w-5" />
           </button>
@@ -196,7 +225,7 @@ export const Projects = () => {
             onClick={scrollNext}
             aria-label="Next project"
             data-testid="projects-next-btn"
-            className="absolute right-0 top-1/2 z-[1001] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-800/80 bg-slate-950/80 text-slate-300 backdrop-blur transition-colors hover:border-cyan-500/40 hover:text-cyan-400 sm:right-2"
+            className="absolute right-0 top-[34%] z-[1001] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-800/80 bg-slate-950/80 text-slate-300 backdrop-blur transition-colors hover:border-cyan-500/40 hover:text-cyan-400 sm:right-2"
           >
             <ChevronRight className="h-5 w-5" />
           </button>
