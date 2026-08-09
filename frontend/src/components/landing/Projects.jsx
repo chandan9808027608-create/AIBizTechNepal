@@ -1,33 +1,29 @@
-import { FileText, ScanText, BarChart3, Mic, ArrowRight } from "lucide-react";
+import { ArrowRight } from "lucide-react";
+
+const shot = (url) =>
+  `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url`;
 
 const PROJECTS = [
   {
-    icon: FileText,
-    title: "Enterprise Knowledge Base Assistant",
-    desc: "A retrieval-augmented assistant that lets employees query internal policies, contracts, and reports in plain language. Cuts information lookup from hours to seconds across large organizations.",
-    tags: ["NLP", "RAG"],
-    testId: "project-knowledge-base",
+    title: "Auto Stock Manager",
+    desc: "A stock and inventory management web app for tracking product levels and stock movements in real time.",
+    tags: ["JavaScript", "Inventory"],
+    screenshot: shot("https://auto-stock-manager.vercel.app"),
+    testId: "project-auto-stock-manager",
   },
   {
-    icon: ScanText,
-    title: "Automated Invoice & Document Parser",
-    desc: "Computer vision pipeline that extracts line items, totals, and vendor data from scanned invoices and forms. Eliminates manual data entry and feeds clean records straight into accounting systems.",
-    tags: ["OCR", "Vision"],
-    testId: "project-invoice-parser",
+    title: "Gokarna Hillside",
+    desc: "A hospitality website showcasing rooms, amenities, and booking information for a hillside property.",
+    tags: ["Hospitality", "Web"],
+    screenshot: shot("https://slateblue-monkey-364615.hostingersite.com/"),
+    testId: "project-gokarna-hillside",
   },
   {
-    icon: BarChart3,
-    title: "Predictive Analytics Dashboard",
-    desc: "Machine learning models that forecast demand, revenue, and inventory trends from historical business data. Leadership gets forward-looking insight instead of rear-view reporting.",
-    tags: ["Machine Learning", "Data"],
-    testId: "project-predictive-analytics",
-  },
-  {
-    icon: Mic,
-    title: "Nepali Speech & Language Integration",
-    desc: "Speech-to-text and language tooling tuned for Nepali and mixed-language audio. Powers voice-enabled customer service, transcription, and accessible digital experiences for local users.",
-    tags: ["Speech-to-Text", "Localization"],
-    testId: "project-nepali-speech",
+    title: "Five Finger Futsal",
+    desc: "A booking and information site for a local futsal venue, built with Next.js.",
+    tags: ["TypeScript", "Sports Booking"],
+    screenshot: shot("https://five-finger-futsal.vercel.app"),
+    testId: "project-five-finger-futsal",
   },
 ];
 
@@ -45,40 +41,45 @@ export const Projects = () => {
           </p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2">
+        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {PROJECTS.map((project, i) => (
             <article
               key={project.testId}
               data-testid={project.testId}
               style={{ animationDelay: `${i * 120}ms` }}
-              className="animate-fade-up group flex flex-col rounded-sm border border-slate-800/80 bg-slate-950 p-8 transition-all hover:-translate-y-1 hover:border-cyan-500/30 hover:bg-slate-900 lg:p-10"
+              className="animate-fade-up group flex flex-col overflow-hidden rounded-sm border border-slate-800/80 bg-slate-950 transition-all hover:-translate-y-1 hover:border-cyan-500/30 hover:bg-slate-900"
             >
-              <div className="flex items-center justify-between">
-                <span className="flex h-14 w-14 items-center justify-center rounded-sm border border-slate-800/80 bg-gradient-to-br from-slate-900 to-slate-950 text-cyan-400 transition-colors group-hover:border-cyan-500/50">
-                  <project.icon className="h-7 w-7" strokeWidth={1.6} />
-                </span>
-                <span className="font-mono text-xs text-slate-600">0{i + 1}</span>
+              <div className="aspect-video w-full overflow-hidden border-b border-slate-800/80 bg-slate-900">
+                <img
+                  src={project.screenshot}
+                  alt={`${project.title} landing page screenshot`}
+                  data-testid={`${project.testId}-screenshot`}
+                  loading="lazy"
+                  className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
+                />
               </div>
-              <h3 className="mt-6 font-heading text-xl font-medium text-slate-100">{project.title}</h3>
-              <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">{project.desc}</p>
-              <div className="mt-6 flex flex-wrap gap-2">
-                {project.tags.map((tag) => (
-                  <span
-                    key={tag}
-                    className="rounded-sm border border-cyan-500/20 bg-cyan-500/5 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-cyan-400"
-                  >
-                    {tag}
-                  </span>
-                ))}
+              <div className="flex flex-1 flex-col p-8">
+                <h3 className="font-heading text-xl font-medium text-slate-100">{project.title}</h3>
+                <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">{project.desc}</p>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="rounded-sm border border-cyan-500/20 bg-cyan-500/5 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-cyan-400"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                <a
+                  href="#contact"
+                  data-testid={`${project.testId}-inquire-link`}
+                  className="mt-8 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-slate-300 transition-colors hover:text-cyan-400"
+                >
+                  Inquire About Solution
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
+                </a>
               </div>
-              <a
-                href="#contact"
-                data-testid={`${project.testId}-inquire-link`}
-                className="mt-8 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-slate-300 transition-colors hover:text-cyan-400"
-              >
-                Inquire About Solution
-                <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-              </a>
             </article>
           ))}
         </div>
