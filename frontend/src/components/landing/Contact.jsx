@@ -8,13 +8,47 @@ const MAP_SRC =
 const inputClass =
   "w-full rounded-sm border border-slate-800/80 bg-slate-900 px-4 py-3 text-sm text-slate-100 placeholder:text-slate-600 focus:border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/40 transition-colors";
 
+const WEB3FORMS_ACCESS_KEY = process.env.REACT_APP_WEB3FORMS_ACCESS_KEY;
+
 export const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", brief: "" });
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast.success("Inquiry received. Our team will reach out to you shortly.");
-    setForm({ name: "", email: "", brief: "" });
+
+    if (!WEB3FORMS_ACCESS_KEY) {
+      toast.error("Contact form is not configured yet. Please email us directly.");
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      const response = await fetch("https://api.web3forms.com/submit", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({
+          access_key: WEB3FORMS_ACCESS_KEY,
+          subject: `New inquiry from ${form.name} via AI Biztech Nepal website`,
+          from_name: "AI Biztech Nepal Website",
+          name: form.name,
+          email: form.email,
+          message: form.brief,
+        }),
+      });
+      const result = await response.json();
+
+      if (result.success) {
+        toast.success("Inquiry received. Our team will reach out to you shortly.");
+        setForm({ name: "", email: "", brief: "" });
+      } else {
+        toast.error("Something went wrong. Please try again or email us directly.");
+      }
+    } catch (error) {
+      toast.error("Something went wrong. Please try again or email us directly.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -143,9 +177,10 @@ export const Contact = () => {
               <button
                 type="submit"
                 data-testid="contact-submit-btn"
-                className="inline-flex items-center justify-center gap-2 rounded-sm bg-gradient-to-r from-cyan-500 to-blue-600 px-8 py-3.5 font-heading text-sm font-medium text-slate-950 transition-transform hover:-translate-y-0.5"
+                disabled={isSubmitting}
+                className="inline-flex items-center justify-center gap-2 rounded-sm bg-gradient-to-r from-cyan-500 to-blue-600 px-8 py-3.5 font-heading text-sm font-medium text-slate-950 transition-transform hover:-translate-y-0.5 disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0"
               >
-                Submit Inquiry
+                {isSubmitting ? "Sending..." : "Submit Inquiry"}
                 <Send className="h-4 w-4" />
               </button>
             </div>
