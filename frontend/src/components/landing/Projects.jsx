@@ -5,11 +5,11 @@ const shot = (url, version) =>
 
 const PROJECTS = [
   {
-    title: "Auto Stock Manager",
-    desc: "A stock and inventory management web app for tracking product levels and stock movements in real time.",
-    tags: ["JavaScript", "Inventory"],
-    screenshot: shot("https://auto-stock-manager.vercel.app"),
-    testId: "project-auto-stock-manager",
+    title: "G&G Auto Enterprises",
+    desc: "A second-hand bike marketplace with a customer storefront and an internal system for tracking inventory and stock movements in real time.",
+    tags: ["JavaScript", "E-Commerce"],
+    screenshot: shot("https://www.hamroauto.com.np", 1),
+    testId: "project-gg-auto",
   },
   {
     title: "Gokarna Hillside",
@@ -24,6 +24,27 @@ const PROJECTS = [
     tags: ["TypeScript", "Sports Booking"],
     screenshot: shot("https://five-finger-futsal.vercel.app"),
     testId: "project-five-finger-futsal",
+  },
+  {
+    title: "Attendance Nepal",
+    desc: "An attendance, payroll, and biometric device management console for organizations.",
+    tags: ["Attendance", "Payroll"],
+    screenshot: shot("https://attendancenepal.vercel.app", 1),
+    testId: "project-attendance-nepal",
+  },
+  {
+    title: "All In One Abroad",
+    desc: "An e-commerce store selling travel luggage and cooking essentials for students and professionals heading abroad.",
+    tags: ["E-Commerce", "Retail"],
+    screenshot: shot("https://darksalmon-porcupine-104945.hostingersite.com/", 1),
+    testId: "project-all-in-one-abroad",
+  },
+  {
+    title: "Ace Money Exchange",
+    desc: "An NRB-licensed currency exchange site in Thamel with a live rate converter for 30+ currencies.",
+    tags: ["FinTech", "Currency Exchange"],
+    screenshot: shot("https://acemoneyexchange.com.np/", 1),
+    testId: "project-ace-money-exchange",
   },
 ];
 
