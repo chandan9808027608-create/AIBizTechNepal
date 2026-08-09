@@ -1,4 +1,6 @@
-import { ArrowRight } from "lucide-react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import useEmblaCarousel from "embla-carousel-react";
+import { ArrowRight, ChevronLeft, ChevronRight } from "lucide-react";
 
 const shot = (url, version) =>
   `https://api.microlink.io/?url=${encodeURIComponent(url)}&screenshot=true&meta=false&embed=screenshot.url${version ? `&v=${version}` : ""}`;
@@ -48,7 +50,92 @@ const PROJECTS = [
   },
 ];
 
+const ROTATE_FACTOR = 60;
+const MAX_ROTATE = 46;
+
+const clamp = (n, min, max) => Math.min(Math.max(n, min), max);
+
 export const Projects = () => {
+  const [emblaRef, emblaApi] = useEmblaCarousel({
+    loop: true,
+    align: "center",
+    skipSnaps: false,
+  });
+  const tweenNodes = useRef([]);
+  const [selectedIndex, setSelectedIndex] = useState(0);
+
+  const setTweenNodes = useCallback((api) => {
+    tweenNodes.current = api.slideNodes().map((slideNode) => slideNode.querySelector(".coverflow-item"));
+  }, []);
+
+  const tweenCoverflow = useCallback((api) => {
+    const engine = api.internalEngine();
+    const scrollProgress = api.scrollProgress();
+
+    api.scrollSnapList().forEach((scrollSnap, snapIndex) => {
+      let diffToTarget = scrollSnap - scrollProgress;
+      const slidesInSnap = engine.slideRegistry[snapIndex];
+
+      slidesInSnap.forEach((slideIndex) => {
+        if (engine.options.loop) {
+          engine.slideLooper.loopPoints.forEach((loopItem) => {
+            const target = loopItem.target();
+            if (slideIndex === loopItem.index && target !== 0) {
+              const sign = Math.sign(target);
+              if (sign === -1) diffToTarget = scrollSnap - (1 + scrollProgress);
+              if (sign === 1) diffToTarget = scrollSnap + (1 - scrollProgress);
+            }
+          });
+        }
+
+        const node = tweenNodes.current[slideIndex];
+        if (!node) return;
+
+        const rotateY = clamp(diffToTarget * -ROTATE_FACTOR, -MAX_ROTATE, MAX_ROTATE);
+        const scale = clamp(1 - Math.abs(diffToTarget) * 0.34, 0.66, 1);
+        const translateZ = -Math.abs(diffToTarget) * 160;
+        const translateX = diffToTarget * -46;
+        const opacity = clamp(1 - Math.abs(diffToTarget) * 0.55, 0.4, 1);
+
+        node.style.transform = `translateX(${translateX}px) translateZ(${translateZ}px) rotateY(${rotateY}deg) scale(${scale})`;
+        node.style.opacity = String(opacity);
+        node.style.zIndex = String(1000 - Math.round(Math.abs(diffToTarget) * 100));
+      });
+    });
+  }, []);
+
+  useEffect(() => {
+    if (!emblaApi) return;
+
+    setTweenNodes(emblaApi);
+    tweenCoverflow(emblaApi);
+    setSelectedIndex(emblaApi.selectedScrollSnap());
+
+    const onSelect = () => setSelectedIndex(emblaApi.selectedScrollSnap());
+    const onReInit = () => {
+      setTweenNodes(emblaApi);
+      tweenCoverflow(emblaApi);
+    };
+
+    emblaApi.on("select", onSelect);
+    emblaApi.on("reInit", onReInit);
+    emblaApi.on("scroll", tweenCoverflow);
+    emblaApi.on("slideFocus", tweenCoverflow);
+
+    return () => {
+      emblaApi.off("select", onSelect);
+      emblaApi.off("reInit", onReInit);
+      emblaApi.off("scroll", tweenCoverflow);
+      emblaApi.off("slideFocus", tweenCoverflow);
+    };
+  }, [emblaApi, setTweenNodes, tweenCoverflow]);
+
+  const scrollPrev = useCallback(() => emblaApi && emblaApi.scrollPrev(), [emblaApi]);
+  const scrollNext = useCallback(() => emblaApi && emblaApi.scrollNext(), [emblaApi]);
+  const scrollTo = useCallback((index) => emblaApi && emblaApi.scrollTo(index), [emblaApi]);
+
+  const active = PROJECTS[selectedIndex] ?? PROJECTS[0];
+
   return (
     <section id="projects" data-testid="projects-section" className="border-b border-slate-800/80 scroll-mt-20">
       <div className="mx-auto max-w-7xl px-6 py-24 lg:px-10 lg:py-32">
@@ -62,46 +149,93 @@ export const Projects = () => {
           </p>
         </div>
 
-        <div className="mt-14 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {PROJECTS.map((project, i) => (
-            <article
-              key={project.testId}
-              data-testid={project.testId}
-              style={{ animationDelay: `${i * 120}ms` }}
-              className="animate-fade-up group flex flex-col overflow-hidden rounded-sm border border-slate-800/80 bg-slate-950 transition-all hover:-translate-y-1 hover:border-cyan-500/30 hover:bg-slate-900"
-            >
-              <div className="aspect-video w-full overflow-hidden border-b border-slate-800/80 bg-slate-900">
-                <img
-                  src={project.screenshot}
-                  alt={`${project.title} landing page screenshot`}
-                  data-testid={`${project.testId}-screenshot`}
-                  loading="lazy"
-                  className="h-full w-full object-cover object-top transition-transform duration-300 group-hover:scale-105"
-                />
-              </div>
-              <div className="flex flex-1 flex-col p-8">
-                <h3 className="font-heading text-xl font-medium text-slate-100">{project.title}</h3>
-                <p className="mt-3 flex-1 text-sm leading-relaxed text-slate-400">{project.desc}</p>
-                <div className="mt-6 flex flex-wrap gap-2">
-                  {project.tags.map((tag) => (
-                    <span
-                      key={tag}
-                      className="rounded-sm border border-cyan-500/20 bg-cyan-500/5 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-cyan-400"
-                    >
-                      {tag}
-                    </span>
-                  ))}
-                </div>
-                <a
-                  href="#contact"
-                  data-testid={`${project.testId}-inquire-link`}
-                  className="mt-8 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-slate-300 transition-colors hover:text-cyan-400"
+        <div className="relative mt-16">
+          <div className="overflow-hidden" style={{ perspective: "1600px" }} ref={emblaRef}>
+            <div className="flex touch-pan-y items-center py-8">
+              {PROJECTS.map((project, i) => (
+                <div
+                  key={project.testId}
+                  className="min-w-0 flex-[0_0_72%] px-3 sm:flex-[0_0_52%] md:flex-[0_0_40%] lg:flex-[0_0_32%]"
+                  style={{ transformStyle: "preserve-3d" }}
                 >
-                  Inquire About Solution
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-1" />
-                </a>
-              </div>
-            </article>
+                  <button
+                    type="button"
+                    onClick={() => scrollTo(i)}
+                    data-testid={project.testId}
+                    aria-label={`Show ${project.title}`}
+                    aria-current={i === selectedIndex}
+                    className="coverflow-item group block aspect-video w-full overflow-hidden rounded-sm border border-slate-800/80 bg-slate-900 shadow-2xl shadow-black/60 outline-none focus-visible:border-cyan-500/60"
+                    style={{ transformStyle: "preserve-3d", willChange: "transform, opacity" }}
+                  >
+                    <img
+                      src={project.screenshot}
+                      alt={`${project.title} landing page screenshot`}
+                      data-testid={`${project.testId}-screenshot`}
+                      loading="lazy"
+                      draggable={false}
+                      className="h-full w-full select-none object-cover object-top"
+                    />
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={scrollPrev}
+            aria-label="Previous project"
+            data-testid="projects-prev-btn"
+            className="absolute left-0 top-1/2 z-[1001] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-800/80 bg-slate-950/80 text-slate-300 backdrop-blur transition-colors hover:border-cyan-500/40 hover:text-cyan-400 sm:left-2"
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </button>
+          <button
+            type="button"
+            onClick={scrollNext}
+            aria-label="Next project"
+            data-testid="projects-next-btn"
+            className="absolute right-0 top-1/2 z-[1001] flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full border border-slate-800/80 bg-slate-950/80 text-slate-300 backdrop-blur transition-colors hover:border-cyan-500/40 hover:text-cyan-400 sm:right-2"
+          >
+            <ChevronRight className="h-5 w-5" />
+          </button>
+        </div>
+
+        <div key={active.testId} className="animate-fade-up mx-auto mt-12 max-w-2xl text-center">
+          <h3 className="font-heading text-xl font-medium text-slate-100">{active.title}</h3>
+          <p className="mt-3 text-sm leading-relaxed text-slate-400">{active.desc}</p>
+          <div className="mt-5 flex flex-wrap justify-center gap-2">
+            {active.tags.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-sm border border-cyan-500/20 bg-cyan-500/5 px-2.5 py-1 font-mono text-[11px] uppercase tracking-wider text-cyan-400"
+              >
+                {tag}
+              </span>
+            ))}
+          </div>
+          <a
+            href="#contact"
+            data-testid={`${active.testId}-inquire-link`}
+            className="mt-6 inline-flex items-center gap-2 font-mono text-xs uppercase tracking-[0.15em] text-slate-300 transition-colors hover:text-cyan-400"
+          >
+            Inquire About Solution
+            <ArrowRight className="h-3.5 w-3.5" />
+          </a>
+        </div>
+
+        <div className="mt-8 flex justify-center gap-2">
+          {PROJECTS.map((project, i) => (
+            <button
+              key={project.testId}
+              type="button"
+              onClick={() => scrollTo(i)}
+              aria-label={`Go to ${project.title}`}
+              data-testid={`${project.testId}-dot`}
+              className={`h-1.5 rounded-full transition-all ${
+                i === selectedIndex ? "w-6 bg-cyan-400" : "w-1.5 bg-slate-700 hover:bg-slate-600"
+              }`}
+            />
           ))}
         </div>
       </div>
