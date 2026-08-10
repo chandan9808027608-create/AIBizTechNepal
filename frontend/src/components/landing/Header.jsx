@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { Cpu, Menu, X } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import logo from "../../assets/logo.png";
 
 const NAV_LINKS = [
   { label: "About", href: "#about", testId: "nav-link-about" },
@@ -18,9 +19,7 @@ export const Header = () => {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-10">
         <a href="#top" data-testid="logo-link" className="flex items-center gap-3">
-          <span className="animate-pulse-glow flex h-9 w-9 items-center justify-center rounded-sm border border-cyan-500/50 bg-gradient-to-br from-cyan-500 to-blue-600 text-slate-950">
-            <Cpu className="h-5 w-5" strokeWidth={2.2} />
-          </span>
+          <img src={logo} alt="AI Biztech Nepal" className="h-9 w-9" />
           <span className="font-heading text-lg font-medium tracking-tight text-slate-100">
             AI Biztech <span className="text-cyan-400">Nepal</span>
           </span>
